@@ -2,6 +2,7 @@
 import subprocess
 import datetime
 import asyncio
+import queue
 
 # Setup for features
 import openrgb
@@ -19,6 +20,7 @@ from features.Sun import Sun
 class Park:
     attractions = {}
     audio_device = None
+    show_queue = queue.Queue()
 
     # Set things up
     def __init__(self):
@@ -28,9 +30,20 @@ class Park:
 
     # Open the park!
     async def open(self):
+        print("Opening park")
         while True:
-            print("Opening park")
+            if (self.show_queue.qsize() > 0):
+                dothis = self.show_queue.get()
+                dothis()
+            else:
+                # Do a usual light show thing as needed
+                pass
             await asyncio.sleep(1)
+
+
+    # Pause park operations to run a special thing
+    def enqueue(self,show):
+        self.show_queue.put(show)
 
     # Close park, shut things down
     def close(self):
