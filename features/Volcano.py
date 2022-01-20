@@ -12,7 +12,7 @@ class Volcano(Feature):
     ]
 
     device = 'Razer Chroma Addressable RGB Controller'
-    zone = 0
+    zone = 5
 
     def __init__(self,orgb_client):
         print("Volcano init")

@@ -5,7 +5,7 @@ from features.Feature import Feature
 class Sun(Feature):
 
     device = 'Razer Chroma Addressable RGB Controller'
-    zone = 3
+    zone = 4
 
     def __init__(self,orgb_client):
         print("Volcano init")
