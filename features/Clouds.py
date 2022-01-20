@@ -44,9 +44,8 @@ class Clouds(Feature):
     zone = 3
 
 
-    def __init__(self,orgb_client):
-        print("Cloud init")
-        Feature.__init__(self,orgb_client)
+    #def __init__(self,orgb_client):
+    #    Feature.__init__(self,orgb_client)
 
      
 

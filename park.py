@@ -1,5 +1,4 @@
 # Service required
-import subprocess
 import datetime
 import asyncio
 import queue
@@ -8,25 +7,16 @@ import queue
 import openrgb
 from openrgb import OpenRGBClient
 from openrgb.utils import RGBColor, DeviceType
+from features import Features
 
 # Features
-from features.Volcano import Volcano
-from features.Clouds import Clouds
-from features.Mobo import Mobo
-from features.Waves import Waves
-from features.Tree import Tree
-from features.Sun import Sun
-
 class Park:
     attractions = {}
-    audio_device = None
     show_queue = queue.Queue()
 
     # Set things up
     def __init__(self):
-        self.audio_device = subprocess.check_output("cat /proc/asound/cards | grep -B1 Jieli | head -1 | sed 's/.\?\([0-9]\) \[.*/\\1/g'",shell=True).rstrip().decode('UTF-8')
         self.connect_all()
-        print("Using audio device '" + self.audio_device + "'")
 
     # Open the park!
     async def open(self):
@@ -55,19 +45,9 @@ class Park:
     def connect_all(self):
         self.orgb_client = OpenRGBClient()
 
-        # TODO: Make attractions singletons?
-        self.attractions['v'] = Volcano(self.orgb_client)
-        self.attractions['c'] = Clouds(self.orgb_client)
-        self.attractions['m'] = Mobo(self.orgb_client)
-        self.attractions['w'] = Waves(self.orgb_client)
-        self.attractions['t'] = Tree(self.orgb_client)
-        self.attractions['s'] = Sun(self.orgb_client)
-
-    # Play a music file
-    def play_music(audiofile):
-        pid = os.fork()
-        if ( pid == 0 ): 
-            os.system("aplay -q -D " + self.audio_device + " " + audiofile)
-            os._exit(0)
-        else: 
-            return pid
+        self.attractions['v'] = Features.Volcano(self.orgb_client)
+        self.attractions['c'] = Features.Clouds(self.orgb_client)
+        self.attractions['m'] = Features.Mobo(self.orgb_client)
+        self.attractions['w'] = Features.Waves(self.orgb_client)
+        self.attractions['t'] = Features.Tree(self.orgb_client)
+        self.attractions['s'] = Features.Sun(self.orgb_client)

@@ -5,8 +5,6 @@ import park
 import signal
 import time
 
-
-
 class Hammond:
 
     # The park object
@@ -72,7 +70,6 @@ class Hammond:
             self.button_last_click = datetime.datetime.now()
         else:
             print("Debounced")
-
 
 
 h = Hammond()

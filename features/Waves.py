@@ -7,6 +7,5 @@ class Waves(Feature):
     device = 'Razer Chroma Addressable RGB Controller'
     zone = 0
 
-    def __init__(self,orgb_client):
-        print("Waves init")
-        Feature.__init__(self,orgb_client)
+    #def __init__(self,orgb_client):
+    #    Feature.__init__(self,orgb_client)
