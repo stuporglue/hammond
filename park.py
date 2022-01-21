@@ -20,11 +20,12 @@ class Park:
 
     # Open the park!
     async def open(self):
-        print("Opening park")
+        # TODO: Creaky door noise
         while True:
             if (self.show_queue.qsize() > 0):
+                print("Yes queue")
                 dothis = self.show_queue.get()
-                dothis()
+                await dothis.start()
             else:
                 # Do a usual light show thing as needed
                 pass
@@ -47,7 +48,7 @@ class Park:
 
         self.attractions['v'] = Features.Volcano(self.orgb_client)
         self.attractions['c'] = Features.Clouds(self.orgb_client)
-        self.attractions['m'] = Features.Mobo(self.orgb_client)
+        #self.attractions['m'] = Features.Mobo(self.orgb_client)
         self.attractions['w'] = Features.Waves(self.orgb_client)
         self.attractions['t'] = Features.Tree(self.orgb_client)
         self.attractions['s'] = Features.Sun(self.orgb_client)

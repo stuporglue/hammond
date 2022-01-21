@@ -1,4 +1,5 @@
 from shows.Show import *
+import random
 
 class Adventure(Show):
 
@@ -7,10 +8,13 @@ class Adventure(Show):
 
     @staticmethod
     async def light_show():
-        v = Features.Volcano.get_instance()
-        c = Features.Clouds.get_instance()
-        t = Features.Tree.get_instance()
-        w = Features.Waves.get_instance()
-        print("Doing light show")
-        await asyncio.sleep(0.5)
+        feats = [
+                Features.Volcano.get_instance(),
+                Features.Clouds.get_instance(),
+                Features.Tree.get_instance(),
+                Features.Waves.get_instance()
+            ]
+        while True:
+            random.choice(feats).shuffle_colors()
+            await asyncio.sleep(0.1)
 

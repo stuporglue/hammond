@@ -64,12 +64,10 @@ class Show:
 
 
     @classmethod
-    def start(cls):
-        # New async loop
-        loop = asyncio.get_event_loop()
+    async def start(cls):
 
         light_io = None
-        run_complete_tasks = []
+        gather_these = []
 
         # Start light show, if present
         if hasattr(cls,'light_show'):
@@ -77,23 +75,16 @@ class Show:
 
         # Enqueue audio, if present
         if cls.audiofile is not None:
-            run_complete_tasks.append(cls.play_music(cls.audiofile))
+            t = cls.play_music(cls.audiofile)
+            gather_these.append(t)
 
         # Enqueue script, if present
         if cls.executable is not None:
-            run_complete_tasks.append(cls.exec_something(cls.executable))
+            t = cls.exec_something(cls.executable)
+            gather_these.append(t)
 
-        loop.run_until_complete(asyncio.wait(run_complete_tasks))
+        await asyncio.gather(*gather_these)
 
         # Cancel the lights and wait for cancel to complete
         if light_io is not None:
             light_io.cancel()
-            with suppress(asyncio.CancelledError):
-                loop.run_until_complete(task)
-        
-        # Stop it all!
-        loop.stop()
-
-        # Close the loop
-        loop.close()
-

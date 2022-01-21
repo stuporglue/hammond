@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 import datetime
 import asyncio
-import park
 import signal
 import time
+import random
+
+import park
+from shows import Shows
 
 class Hammond:
 
@@ -23,6 +26,12 @@ class Hammond:
             '23:30': "asdf"
             }
 
+
+    shows = [
+            Shows.Adventure,
+            Shows.Volcano
+            ]
+
     # Initialize Hammond. Set up signal handlers and start the park
     def __init__(self):
         self.p = park.Park()
@@ -31,20 +40,26 @@ class Hammond:
         signal.signal(signal.SIGINT,self.shutdown)
         signal.signal(signal.SIGUSR1,self.button_press)
 
-    # Start working
+    # Wrapper so we don't have to asyncio anything outside of the class
     def clock_in(self):
+        asyncio.run(self._clock_in())
+
+    # Start working
+    async def _clock_in(self):
         # Two async loops: 
         # 1) The park loop
         # 2) The cron loop
 
-        self.loop = asyncio.get_event_loop()
-        asyncio.ensure_future(self.p.open())
-        asyncio.ensure_future(self.cron())
-        self.loop.run_forever()
+        try: 
+            await asyncio.gather(
+                    asyncio.shield(self.p.open()),
+                    asyncio.shield(self.cron())
+                )
+        except asyncio.exceptions.CancelledError:
+            # Exception will be thrown when we cancel in sigterm/sigint
+            pass
 
-        self.p.close()
-
-        print("Ending clock_in")
+            print("Ending clock_in")
 
 
     # Run periodic tasks (eg. startup)
@@ -53,21 +68,21 @@ class Hammond:
             its_now = datetime.datetime.now()
             if ( datetime.datetime.now() - self.last_cron > datetime.timedelta(minutes=5)):
                 print("Checking crons")
-            else:
-                print("Too short for crons")
+
             last_cron = its_now
             await asyncio.sleep(1)
 
     # Handle shutdown, kill signal, etc
     def shutdown(self,signo,stackframe):
-        self.loop.stop()
+        for t in asyncio.all_tasks():
+            t.cancel()
 
 
     # Handle case button press
     def button_press(self,signo,stackframe):
         if ( datetime.datetime.now() - self.button_last_click > datetime.timedelta(seconds=self.button_debounce_time) ):
-            print("button press")
             self.button_last_click = datetime.datetime.now()
+            self.p.enqueue(random.choice(self.shows))
         else:
             print("Debounced")
 

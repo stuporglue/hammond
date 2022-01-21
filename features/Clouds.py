@@ -5,10 +5,9 @@ from openrgb.utils import RGBColor
 from features.Feature import Feature
 
 class Clouds(Feature):
-    dappled = [
+    base_colors = [
             RGBColor(100,100,100),
             RGBColor(255,255,255),
-            RGBColor(0,0,0),
             RGBColor(175,175,175)
             ]
 
@@ -42,10 +41,3 @@ class Clouds(Feature):
 
     device = 'Razer Chroma Addressable RGB Controller'
     zone = 3
-
-
-    #def __init__(self,orgb_client):
-    #    Feature.__init__(self,orgb_client)
-
-     
-
