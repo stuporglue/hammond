@@ -35,8 +35,8 @@ class Clouds(Feature):
             RGBColor(175,175,175),
             RGBColor(255,255,255),
             RGBColor(0,0,0),
-        RGBColor(175,175,175),
-        RGBColor(175,175,175)
+            RGBColor(175,175,175),
+            RGBColor(175,175,175)
         ]
 
     device = 'Razer Chroma Addressable RGB Controller'

@@ -29,7 +29,12 @@ class Hammond:
 
     shows = [
             Shows.Adventure,
-            Shows.Volcano
+            Shows.Clouds,
+            Shows.JurrasicPark,
+            Shows.Roar,
+            Shows.Roar2,
+            Shows.Volcano,
+            Shows.Waves
             ]
 
     # Initialize Hammond. Set up signal handlers and start the park

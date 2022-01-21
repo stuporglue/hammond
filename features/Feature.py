@@ -38,8 +38,14 @@ class Feature:
         self.zone.set_color(RGBColor(0,0,0))
 
     def shuffle_colors(self):
-        c = random.choices(self.base_colors,k=len(self.zone.leds))
+        c = random.choices(self.base_colors,k=self.len())
         self.zone.set_colors(c,fast=True)
+
+    def len(self):
+        return len(self.zone.leds)
+
+    def set_colors(self,colors,fast=False):
+        return self.zone.set_colors(colors,fast)
 
 class FeatureNotReadyException(Exception):
     pass
