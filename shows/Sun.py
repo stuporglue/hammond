@@ -1,12 +1,12 @@
 from shows.Show import *
 
-class Volcano(Show):
+class Sun(Show):
     audiofile = 'explosion4.wav'
 
     async def light_show():
-        v = Features.Volcano.get_instance()
+        s = Features.Sun.get_instance()
         while True:
-            v.shuffle_colors()
+            s.shuffle_colors()
             await asyncio.sleep(0.1)
 
 

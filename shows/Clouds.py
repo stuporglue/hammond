@@ -8,20 +8,20 @@ class Clouds(Show):
         c = Features.Clouds.get_instance()
 
         # 15 seconds of dapple
-        for i in range(0,30):
+        for i in range(0,20):
             colors = random.choices(c.base_colors,k=c.len())
             c.set_colors(colors,fast=True)
-            await asyncio.sleep(0.05)
+            await asyncio.sleep(0.2)
 
 
         # 15 seconds of lightning
-        for i in range(0,30):
+        for i in range(0,20):
             colors = random.choices(c.lightning,k=c.len())
             c.set_colors(colors,fast=True)
-            await asyncio.sleep(0.05)
+            await asyncio.sleep(0.1)
 
         # wrapup till we're done
         while True:
             colors = random.choices(c.wrapup,k=c.len())
             c.set_colors(colors,fast=True)
-            await asyncio.sleep(0.05)
+            await asyncio.sleep(0.2)

@@ -4,7 +4,8 @@ from features.Feature import Feature
 
 class Sun(Feature):
     base_colors = [
-            RGBColor(255,255,0)
+            RGBColor(255,255,0),
+            RGBColor(255,100,0)
             ]
 
     device = 'Razer Chroma Addressable RGB Controller'

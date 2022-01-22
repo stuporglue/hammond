@@ -26,7 +26,6 @@ class Hammond:
             '23:30': "asdf"
             }
 
-
     shows = [
             Shows.Adventure,
             Shows.Clouds,
