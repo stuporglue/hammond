@@ -44,6 +44,7 @@ class Hammond:
         signal.signal(signal.SIGTERM,self.shutdown)
         signal.signal(signal.SIGINT,self.shutdown)
         signal.signal(signal.SIGUSR1,self.button_press)
+        signal.signal(signal.SIGUSR2,self.testfunc)
 
     # Wrapper so we don't have to asyncio anything outside of the class
     def clock_in(self):
@@ -64,15 +65,14 @@ class Hammond:
             # Exception will be thrown when we cancel in sigterm/sigint
             pass
 
-            print("Ending clock_in")
-
 
     # Run periodic tasks (eg. startup)
     async def cron(self):
         while True:
             its_now = datetime.datetime.now()
             if ( datetime.datetime.now() - self.last_cron > datetime.timedelta(minutes=5)):
-                print("Checking crons")
+                # TODO: Check crons
+                pass
 
             last_cron = its_now
             await asyncio.sleep(1)
@@ -87,9 +87,30 @@ class Hammond:
     def button_press(self,signo,stackframe):
         if ( datetime.datetime.now() - self.button_last_click > datetime.timedelta(seconds=self.button_debounce_time) ):
             self.button_last_click = datetime.datetime.now()
-            self.p.enqueue(random.choice(self.shows))
+            self.enqueue_show(random.choice(self.shows))
         else:
-            print("Debounced")
+            pass
+
+    # Enqueue one
+    def enqueue_show(self,the_show):
+        return self.p.enqueue(the_show)
+
+    def demo(self):
+        for s in self.shows:
+            print("Trying to demo " + str(s))
+            while not self.enqueue_show(s):
+                print("Couldn't enqueue, sleeping")
+                time.sleep(1)
+
+    # Function to do testing
+    def testfunc(self,signo,stackframe):
+
+        import pdb
+        import rlcompleter
+        myvars = globals()
+        myvars.update(locals())
+        pdb.Pdb.complete=rlcompleter.Completer(myvars).complete
+        pdb.set_trace()
 
 
 h = Hammond()

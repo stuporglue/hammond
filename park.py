@@ -23,7 +23,6 @@ class Park:
         # TODO: Creaky door noise
         while True:
             if (self.show_queue.qsize() > 0):
-                print("Yes queue")
                 dothis = self.show_queue.get()
                 await dothis.start()
             else:
@@ -34,11 +33,15 @@ class Park:
 
     # Pause park operations to run a special thing
     def enqueue(self,show):
-        self.show_queue.put(show)
+        if (self.show_queue.qsize() < 3):
+            self.show_queue.put(show)
+            return True
+        else:
+            return False
+
 
     # Close park, shut things down
     def close(self):
-        print("Closing park")
         for k,v in self.attractions.items():
             v.blank()
 
