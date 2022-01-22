@@ -1,0 +1,16 @@
+[Unit]
+Description=Hammond
+Wants=openrgb.target
+After=openrgb.target
+
+[Service]
+Type=simple
+RemainAfterExit=yes
+ExecStart=/usr/local/bin/hammond/hammond.py
+User=root
+ExecStop=kill $(pgrep -f python3.*hammond.py)
+Restart=always
+RestartSec=60
+
+[Install]
+WantedBy=multi-user.target
