@@ -4,6 +4,7 @@ import asyncio
 import signal
 import time
 import random
+import schedule
 
 import park
 from shows import Shows
@@ -19,12 +20,6 @@ class Hammond:
     # Handle button debounce
     button_debounce_time = 0.05
     button_last_click = datetime.datetime.now()
-
-    # Prep for cron work
-    last_cron = datetime.datetime.now()
-    crons = {
-            '23:30': "asdf"
-            }
 
     shows = [
             Shows.Adventure,
@@ -45,6 +40,15 @@ class Hammond:
         signal.signal(signal.SIGUSR1,self.button_press)
         signal.signal(signal.SIGUSR2,self.testfunc)
 
+        self.setup_crons()
+
+    # List all our cron jobs here
+    def setup_crons(self):
+        schedule.every().day.at("22:00").do(self.p.close)
+        schedule.every().day.at("23:00").do(self.p.close)
+        schedule.every().day.at("00:00").do(self.p.close)
+        schedule.every().day.at("06:00").do(self.p.open)
+
     # Wrapper so we don't have to asyncio anything outside of the class
     def clock_in(self):
         asyncio.run(self._clock_in())
@@ -57,30 +61,26 @@ class Hammond:
 
         try: 
             await asyncio.gather(
-                    asyncio.shield(self.p.open()),
+                    asyncio.shield(self.p.open_gates()),
                     asyncio.shield(self.cron())
                 )
         except asyncio.exceptions.CancelledError:
             # Exception will be thrown when we cancel in sigterm/sigint
             pass
 
+        self.p.close()
+
 
     # Run periodic tasks (eg. startup)
     async def cron(self):
         while True:
-            its_now = datetime.datetime.now()
-            if ( datetime.datetime.now() - self.last_cron > datetime.timedelta(minutes=5)):
-                # TODO: Check crons
-                pass
-
-            last_cron = its_now
-            await asyncio.sleep(1)
+            schedule.run_pending()
+            await asyncio.sleep(5)
 
     # Handle shutdown, kill signal, etc
     def shutdown(self,signo,stackframe):
         for t in asyncio.all_tasks():
             t.cancel()
-
 
     # Handle case button press
     def button_press(self,signo,stackframe):
@@ -91,8 +91,8 @@ class Hammond:
             pass
 
     # Enqueue one
-    def enqueue_show(self,the_show):
-        return self.p.enqueue(the_show)
+    def enqueue_show(self,show=None):
+        return self.p.enqueue(show)
 
     def demo(self):
         for s in self.shows:

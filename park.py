@@ -19,8 +19,9 @@ class Park:
         self.connect_all()
 
     # Open the park!
-    async def open(self):
+    async def open_gates(self):
         # TODO: Creaky door noise
+        self.open()
         while True:
             if (self.show_queue.qsize() > 0):
                 dothis = self.show_queue.get()
@@ -30,7 +31,6 @@ class Park:
                 pass
             await asyncio.sleep(1)
 
-
     # Pause park operations to run a special thing
     def enqueue(self,show):
         if (self.show_queue.qsize() < 3):
@@ -39,6 +39,10 @@ class Park:
         else:
             return False
 
+    # Open the park, turn all the lights on
+    def open(self):
+        for k,v in self.attractions.items():
+            v.unblank()
 
     # Close park, shut things down
     def close(self):

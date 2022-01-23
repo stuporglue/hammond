@@ -19,7 +19,6 @@ class Feature:
         self.zone = self.device.zones[self.zone]
         self.__class__.__instance = self
         __class__.__features[str(self.__class__)] = self
-        self.shuffle_colors()
 
     @classmethod
     def get_instance(cls):
@@ -28,14 +27,16 @@ class Feature:
         else:
             return cls.__instance
 
-    def __del__(self):
-        self.device.off()
-
     def off(self):
         self.device.off()
 
     def blank(self):
         self.zone.set_color(RGBColor(0,0,0))
+
+    # The first thing that happens when the lights are turned on
+    # Default is shuffle_colors
+    def unblank(self):
+        self.shuffle_colors()
 
     def shuffle_colors(self):
         c = random.choices(self.base_colors,k=self.len())
