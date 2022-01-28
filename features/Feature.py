@@ -1,7 +1,14 @@
 import openrgb
 from openrgb.utils import RGBColor
 import random
+import park
+from lib.error_wrap import decorate_all_methods
+from lib.error_wrap import ORGBServerReconnect
 
+# https://stackoverflow.com/questions/24024966/try-except-every-method-in-class
+
+
+@decorate_all_methods(ORGBServerReconnect)
 class Feature:
 
     __instance = None
@@ -13,8 +20,8 @@ class Feature:
 
     base_colors = [RGBColor(100,0,100)]
 
-    def __init__(self,orgb_client):
-        self.orgb_client = orgb_client
+    def __init__(self):
+        self.orgb_client = park.Park.get_orgb()
         self.device = self.orgb_client.get_devices_by_name(self.device)[0]
         self.zone = self.device.zones[self.zone]
         self.__class__.__instance = self
@@ -23,9 +30,8 @@ class Feature:
     @classmethod
     def get_instance(cls):
         if cls.__instance == None:
-            raise FeatureNotReadyException
-        else:
-            return cls.__instance
+            cls.__instance = cls()
+        return cls.__instance
 
     def off(self):
         self.device.off()
@@ -47,6 +53,3 @@ class Feature:
 
     def set_colors(self,colors,fast=False):
         return self.zone.set_colors(colors,fast)
-
-class FeatureNotReadyException(Exception):
-    pass

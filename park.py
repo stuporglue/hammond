@@ -2,30 +2,59 @@
 import datetime
 import asyncio
 import queue
+import time
 
 # Setup for features
 import openrgb
 from openrgb import OpenRGBClient
-from openrgb.utils import RGBColor, DeviceType
+#from openrgb.utils import RGBColor, DeviceType
 from features import Features
+from shows import Shows
 
 # Features
 class Park:
     attractions = {}
     show_queue = queue.Queue()
 
+    orgb_client = None
+
+    __instance = None
+
     # Set things up
     def __init__(self):
-        self.connect_all()
+        self.__class__.__instance = self
+
+    @classmethod
+    def get_instance(cls):
+        if cls.__instance == None:
+            c = cls()
+            c.connect_all()
+
+        return cls.__instance
+
+    @classmethod
+    def get_orgb(cls):
+        c = cls.get_instance()
+        return cls.__instance.orgb_client
+
+
 
     # Open the park!
     async def open_gates(self):
         # TODO: Creaky door noise
         self.open()
         while True:
+
             if (self.show_queue.qsize() > 0):
                 dothis = self.show_queue.get()
-                await dothis.start()
+
+                if not self.connected():
+                    self.connect_all()
+
+                if self.connected():
+                    await dothis.start()
+                else:
+                    await Shows.Testing_The_Fences.start()
             else:
                 # Do a usual light show thing as needed
                 pass
@@ -49,13 +78,31 @@ class Park:
         for k,v in self.attractions.items():
             v.blank()
 
+    def connected(self):
+        return self.orgb_client is not None and self.orgb_client.comms.connected
+
     # Connect to Orgb and set up the devices
     def connect_all(self):
-        self.orgb_client = OpenRGBClient()
 
-        self.attractions['v'] = Features.Volcano(self.orgb_client)
-        self.attractions['c'] = Features.Clouds(self.orgb_client)
-        #self.attractions['m'] = Features.Mobo(self.orgb_client)
-        self.attractions['w'] = Features.Waves(self.orgb_client)
-        self.attractions['t'] = Features.Tree(self.orgb_client)
-        self.attractions['s'] = Features.Sun(self.orgb_client)
+        # Initial connection case
+        if self.orgb_client is None:
+            try: 
+                self.orgb_client = OpenRGBClient()
+
+                # On first connection get instances
+                self.attractions['v'] = Features.Volcano.get_instance()
+                self.attractions['c'] = Features.Clouds.get_instance()
+                #self.attractions['m'] = Features.Mobo.get_instance()
+                self.attractions['w'] = Features.Waves.get_instance()
+                self.attractions['t'] = Features.Tree.get_instance()
+                self.attractions['s'] = Features.Sun.get_instance()
+
+            except ConnectionRefusedError as e:
+                pass
+
+        # Reconnect case
+        else:
+            try: 
+                self.orgb_client.connect()
+            except Exception as e:
+                pass

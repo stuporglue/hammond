@@ -33,7 +33,7 @@ class Hammond:
 
     # Initialize Hammond. Set up signal handlers and start the park
     def __init__(self):
-        self.p = park.Park()
+        self.p = park.Park.get_instance()
 
         signal.signal(signal.SIGTERM,self.shutdown)
         signal.signal(signal.SIGINT,self.shutdown)
@@ -51,6 +51,9 @@ class Hammond:
 
     # Wrapper so we don't have to asyncio anything outside of the class
     def clock_in(self):
+
+        self.loop = asyncio.get_event_loop()
+
         asyncio.run(self._clock_in())
 
     # Start working
@@ -77,10 +80,14 @@ class Hammond:
             schedule.run_pending()
             await asyncio.sleep(5)
 
-    # Handle shutdown, kill signal, etc
-    def shutdown(self,signo,stackframe):
+    # Real shutdown
+    def _shutdown(self):
         for t in asyncio.all_tasks():
             t.cancel()
+
+    # Handle shutdown, kill signal, etc
+    def shutdown(self,signo,stackframe):
+        self._shutdown()
 
     # Handle case button press
     def button_press(self,signo,stackframe):
@@ -110,7 +117,6 @@ class Hammond:
         myvars.update(locals())
         pdb.Pdb.complete=rlcompleter.Completer(myvars).complete
         pdb.set_trace()
-
 
 h = Hammond()
 h.clock_in() # Clock in and start working
