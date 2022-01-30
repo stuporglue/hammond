@@ -41,18 +41,26 @@ class Park:
 
     # Open the park!
     async def open_gates(self):
+
+        just_opened = True
+
         # TODO: Creaky door noise
         self.open()
         while True:
 
-            if (self.show_queue.qsize() > 0):
-                dothis = self.show_queue.get()
+            if (just_opened or self.show_queue.qsize() > 0):
+
+                if just_opened:
+                    dothis = Shows.Adventure
+                else:
+                    dothis = self.show_queue.get()
 
                 if not self.connected():
                     self.connect_all()
 
                 if self.connected():
                     await dothis.start()
+                    just_opened = False
                 else:
                     await Shows.Testing_The_Fences.start()
             else:
