@@ -2,6 +2,8 @@ import openrgb
 from openrgb.utils import RGBColor
 from features.Feature import Feature
 
+# Channel 0 - 25 LEDs
+
 class Waves(Feature):
     base_colors = [
         RGBColor(0,0,255),
@@ -22,5 +24,14 @@ class Waves(Feature):
         RGBColor(4,0,138)
     ]
 
+    dark_water_colors = [
+        RGBColor(0,0,144),
+        RGBColor(0,0,71),
+        RGBColor(0,0,200)
+    ]
+
     device = 'Razer Chroma Addressable RGB Controller'
     zone = 0
+
+    def dark_water(self):
+        self.shuffle_colors(colors=self.dark_water_colors)

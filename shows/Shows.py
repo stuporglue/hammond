@@ -6,3 +6,5 @@ from shows.Roar2 import Roar2
 from shows.Volcano import Volcano
 from shows.Waves import Waves
 from shows.Testing_The_Fences import Testing_The_Fences
+from shows.SystemIsDown import SystemIsDown
+from shows.GentleRain import GentleRain

@@ -10,11 +10,14 @@ from openrgb import OpenRGBClient
 #from openrgb.utils import RGBColor, DeviceType
 from features import Features
 from shows import Shows
+import random
 
 # Features
 class Park:
     attractions = {}
     show_queue = queue.Queue()
+
+    park_status = 'closed'
 
     orgb_client = None
 
@@ -80,11 +83,13 @@ class Park:
     def open(self):
         for k,v in self.attractions.items():
             v.unblank()
+        self.park_status = 'opened'
 
     # Close park, shut things down
     def close(self):
         for k,v in self.attractions.items():
             v.blank()
+        self.park_status = 'closed'
 
     def connected(self):
         return self.orgb_client is not None and self.orgb_client.comms.connected
@@ -114,3 +119,18 @@ class Park:
                 self.orgb_client.connect()
             except Exception as e:
                 pass
+
+    # Enqueue a random
+    def random_gentle(self):
+        gentle_shows = [
+            Shows.Clouds,
+            Shows.Volcano,
+            Shows.Waves
+        ]
+
+        if self.park_status == 'closed':
+            print("Closed up")
+            return
+
+        self.enqueue(random.choice(gentle_shows))
+

@@ -2,6 +2,8 @@ import openrgb
 from openrgb.utils import RGBColor
 from features.Feature import Feature
 
+# Channel 6 - 31 LEDs
+
 class Volcano(Feature):
     base_colors = [
         RGBColor(255,0,0),

@@ -24,11 +24,13 @@ class Hammond:
     shows = [
             Shows.Adventure,
             Shows.Clouds,
+            Shows.GentleRain,
             Shows.JurrasicPark,
             Shows.Roar,
             Shows.Roar2,
             Shows.Volcano,
-            Shows.Waves
+            Shows.Waves,
+            Shows.SystemIsDown
             ]
 
     # Initialize Hammond. Set up signal handlers and start the park
@@ -48,6 +50,7 @@ class Hammond:
         schedule.every().day.at("23:00").do(self.p.close)
         schedule.every().day.at("00:00").do(self.p.close)
         schedule.every().day.at("06:00").do(self.p.open)
+        schedule.every(2).to(4).minutes.do(self.p.random_gentle)
 
     # Wrapper so we don't have to asyncio anything outside of the class
     def clock_in(self):

@@ -33,9 +33,11 @@ class Feature:
             cls.__instance = cls()
         return cls.__instance
 
+    # Turns off the whole device (all zones connected to device)
     def off(self):
         self.device.off()
 
+    # Turns off the specific zone for the device
     def blank(self):
         self.zone.set_color(RGBColor(0,0,0))
 
@@ -44,8 +46,10 @@ class Feature:
     def unblank(self):
         self.shuffle_colors()
 
-    def shuffle_colors(self):
-        c = random.choices(self.base_colors,k=self.len())
+    def shuffle_colors(self,colors=None):
+        if colors == None:
+            colors = self.base_colors
+        c = random.choices(colors,k=self.len())
         self.zone.set_colors(c,fast=True)
 
     def len(self):
@@ -53,3 +57,6 @@ class Feature:
 
     def set_colors(self,colors,fast=False):
         return self.zone.set_colors(colors,fast)
+
+    def set_color(self,color,fast=False):
+        return self.zone.set_color(color,fast)

@@ -8,7 +8,7 @@ from contextlib import suppress
 class Show:
     # I can't get my asla devices to show up in the same order after every boot :-(
     # Yes, I tried /etc/modprobe.d/alsa-base.conf
-    audio_device = subprocess.check_output("cat /proc/asound/cards | grep -B1 Jieli | head -1 | sed 's/.\?\([0-9]\) \[.*/\\1/g'",shell=True).rstrip().decode('UTF-8')
+    audio_device = subprocess.check_output("cat /proc/asound/cards | grep -B1 Jieli | head -1 | sed 's/.\?\([0-9]\) \[.*/\\1/g'",shell=True).rstrip().decode('UTF-8') + ",0"
 
     """ 
     A show can have an audiofile, a light_show and an executable
@@ -24,7 +24,7 @@ class Show:
         pid = os.fork()
         if ( pid == 0 ): 
             audiopath = os.path.dirname(os.path.realpath(__file__)) + '/../audio/' + audiofile
-            os.system("aplay -q -D plughw:" + __class__.audio_device + ",0 " + audiopath)
+            os.system("aplay -q -D plughw:" + __class__.audio_device + " " + audiopath)
             os._exit(0)
 
         
@@ -87,4 +87,11 @@ class Show:
 
         # Cancel the lights and wait for cancel to complete
         if light_io is not None:
+            print("Cancelling lights")
             light_io.cancel()
+
+
+    # Provide a way to override the audio device, eg for headphone testing at night.
+    @classmethod
+    def set_audio_device(cls,devint):
+        __class__.audio_device = str(devint)
