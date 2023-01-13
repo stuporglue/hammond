@@ -13,3 +13,6 @@ def set_alphas(colors,alpha):
         color = set_alpha(color,alpha)
 
     return colors
+
+def colorstr(color,pad=0):
+    return str(color.red).zfill(pad) + "," + str(color.green).zfill(pad) + "," + str(color.blue).zfill(pad)

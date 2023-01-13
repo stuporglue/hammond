@@ -4,5 +4,5 @@ import park
 from shows import Shows
 
 # Initialize stuff
-p = park.Park()
-Shows.Adventure.start()
+#p = park.Park()
+#Shows.Adventure.start()

@@ -87,7 +87,6 @@ class Show:
 
         # Cancel the lights and wait for cancel to complete
         if light_io is not None:
-            print("Cancelling lights")
             light_io.cancel()
 
 

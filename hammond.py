@@ -17,6 +17,10 @@ class Hammond:
     # Asyncio objects
     loop = None
 
+    # Tripple Check
+    tripple_check = 0
+    tripple_time = 1
+
     # Handle button debounce
     button_debounce_time = 0.05
     button_last_click = datetime.datetime.now()
@@ -50,7 +54,7 @@ class Hammond:
         schedule.every().day.at("23:00").do(self.p.close)
         schedule.every().day.at("00:00").do(self.p.close)
         schedule.every().day.at("06:00").do(self.p.open)
-        schedule.every(2).to(4).minutes.do(self.p.random_gentle)
+        #schedule.every(2).to(4).minutes.do(self.p.random_gentle)
 
     # Wrapper so we don't have to asyncio anything outside of the class
     def clock_in(self):
@@ -94,11 +98,30 @@ class Hammond:
 
     # Handle case button press
     def button_press(self,signo,stackframe):
+
+
+        # Check for a tripple click and toggle off or on
+        if ( datetime.datetime.now() - self.button_last_click > datetime.timedelta(seconds=self.tripple_time) ):
+            self.tripple_check = self.tripple_check + 1 
+
+            print("Tripple now at " + str(self.tripple_check))
+
+            if self.tripple_check >= 3: 
+                print("Did a tripple")
+                if self.p.park_status == 'closed':
+                    self.p.open()
+                else:
+                    self.p.close()
+        else:
+            self.tripple_check = 1
+ 
+
+        # Otherwise do the normal routine queueing
         if ( datetime.datetime.now() - self.button_last_click > datetime.timedelta(seconds=self.button_debounce_time) ):
             self.button_last_click = datetime.datetime.now()
             self.enqueue_show(random.choice(self.shows))
         else:
-            pass
+           pass
 
     # Enqueue one
     def enqueue_show(self,show=None):

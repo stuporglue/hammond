@@ -87,6 +87,7 @@ class Park:
 
     # Close park, shut things down
     def close(self):
+        self.show_queue.queue.clear()
         for k,v in self.attractions.items():
             v.blank()
         self.park_status = 'closed'
@@ -106,6 +107,8 @@ class Park:
                 self.attractions['v'] = Features.Volcano.get_instance()
                 self.attractions['c'] = Features.Clouds.get_instance()
                 #self.attractions['m'] = Features.Mobo.get_instance()
+                self.attractions['ro'] = Features.RAMOne.get_instance()
+                self.attractions['rt'] = Features.RAMTwo.get_instance()
                 self.attractions['w'] = Features.Waves.get_instance()
                 self.attractions['t'] = Features.Tree.get_instance()
                 self.attractions['s'] = Features.Sun.get_instance()

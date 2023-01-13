@@ -5,3 +5,5 @@ from features.Clouds import Clouds
 from features.Waves import Waves
 from features.Tree import Tree
 from features.Sun import Sun
+from features.RAMOne import RAMOne
+from features.RAMTwo import RAMTwo
