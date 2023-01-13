@@ -25,6 +25,9 @@ class Hammond:
     button_debounce_time = 0.05
     button_last_click = datetime.datetime.now()
 
+    # Watch for when we come out of suspend and do something special
+    last_cron_loop = datetime.datetime.now()
+
     shows = [
             Shows.Adventure,
             Shows.Clouds,
@@ -34,7 +37,8 @@ class Hammond:
             Shows.Roar2,
             Shows.Volcano,
             Shows.Waves,
-            Shows.SystemIsDown
+            Shows.SystemIsDown,
+            Shows.Shark
             ]
 
     # Initialize Hammond. Set up signal handlers and start the park
@@ -84,6 +88,11 @@ class Hammond:
     # Run periodic tasks (eg. startup)
     async def cron(self):
         while True:
+            if ( datetime.datetime.now() - self.last_cron_loop > datetime.timedelta(seconds=60) ):
+                # Do wakeup routine
+                #self.p.open()
+                pass
+
             schedule.run_pending()
             await asyncio.sleep(5)
 

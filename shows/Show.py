@@ -21,9 +21,12 @@ class Show:
     # Play a music file
     @staticmethod
     async def play_music(audiofile):
+        print("Trying to play mjusic")
         pid = os.fork()
         if ( pid == 0 ): 
             audiopath = os.path.dirname(os.path.realpath(__file__)) + '/../audio/' + audiofile
+            print("Using " + audiopath)
+            print("Using " + "aplay -q -D plughw:" + __class__.audio_device + " " + audiopath)
             os.system("aplay -q -D plughw:" + __class__.audio_device + " " + audiopath)
             os._exit(0)
 

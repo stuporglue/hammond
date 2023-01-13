@@ -63,6 +63,7 @@ class Park:
 
                 if self.connected():
                     await dothis.start()
+                    self.open()
                     just_opened = False
                 else:
                     await Shows.Testing_The_Fences.start()

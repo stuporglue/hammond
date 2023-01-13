@@ -5,7 +5,7 @@ import random
 class Shark(Show):
     audiofile = 'jaws.wav'
     old_shark = [-1,-1,-1,-1,-1,-1]
-    cur_shark = [12,24,11,23,10,22]
+    cur_shark = [10,11,12,22,23,24]
     direction = -1
 
     shark_color = RGBColor(0,0,0)
@@ -21,11 +21,17 @@ class Shark(Show):
         self.w.dark_water()
         self.print_shark()
 
-        for i in range(0,100):
+        for i in range(0,10):
             self.bounce_shark()
-            await asyncio.sleep(0.25)
+            await asyncio.sleep(0.4)
 
-        self.w.shuffle_colors()
+        for i in range(0,20):
+            self.bounce_shark()
+            await asyncio.sleep(0.2)
+
+        for i in range(0,20):
+            self.bounce_shark()
+            await asyncio.sleep(0.1)
 
     @classmethod
     def print_shark(self):
@@ -42,16 +48,16 @@ class Shark(Show):
     @classmethod
     def bounce_shark(self):
 
-        # import pdb
-        # pdb.set_trace()
+        self.shark_move()
 
-        if ( self.direction == -1 and (0 in self.cur_shark or 14 in self.cur_shark )):
+        #import pdb
+        #pdb.set_trace()
+
+        if ( self.direction == -1 and 13 in self.cur_shark ):
             self.direction = 1
-
-        if ( self.direction == 1 and (13 in self.cur_shark or 24 in self.cur_shark )):
+        elif ( self.direction == 1 and (13 in self.cur_shark or 24 in self.cur_shark )):
             self.direction = -1
 
-        self.shark_move()
         self.print_shark()
 
     @classmethod
@@ -65,7 +71,7 @@ class Shark(Show):
     def light(self,num):
         for i in range(0,len(self.w.zone.colors)):
             self.w.zone.colors[i] = RGBColor(0,0,0)
-        self.w.zone.colors[num] = self.shark_color
+        self.w.zone.colors[num] = RGBColor(255,255,255)
         self.w.zone.show()
 
 
