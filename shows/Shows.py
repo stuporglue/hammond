@@ -9,3 +9,4 @@ from shows.Testing_The_Fences import Testing_The_Fences
 from shows.SystemIsDown import SystemIsDown
 from shows.GentleRain import GentleRain
 from shows.Shark import Shark
+from shows.VolcanoBubbles import VolcanoBubbles

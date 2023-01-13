@@ -52,10 +52,7 @@ class Feature:
     def shuffle_colors(self,colors=None):
         if colors == None:
             colors = self.base_colors
-        c = random.choices(colors,k=self.len())
-
-        for i in range(0,len(self.zone.colors)):
-            self.zone.colors[i] = random.choice(colors)
+        self.zone.colors = random.choices(colors,k=self.len())
         return self.zone.show()
 
     def len(self):

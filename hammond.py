@@ -36,6 +36,7 @@ class Hammond:
             Shows.Roar,
             Shows.Roar2,
             Shows.Volcano,
+            Shows.VolcanoBubbles,
             Shows.Waves,
             Shows.SystemIsDown,
             Shows.Shark

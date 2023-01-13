@@ -13,15 +13,12 @@ thepark.open()
 
 #p.random_gentle()
 
-
-
-
 # Headphones
-Shows.SystemIsDown.set_audio_device(1)
+# Shows.SystemIsDown.set_audio_device(1)
 
 
-waves = Features.Waves.get_instance()
-waves.dark_water()
+#waves = Features.Waves.get_instance()
+#waves.dark_water()
 #w.print_shape()
 
 #import pdb
@@ -30,7 +27,7 @@ waves.dark_water()
 async def doit():
     #await Shows.Adventure.start()
     #await Shows.SystemIsDown.start()
-    await Shows.Shark.start()
+    await Shows.VolcanoBubbles.start()
 
 print("Loaded")
 time.sleep(2)

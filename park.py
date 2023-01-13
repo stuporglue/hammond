@@ -72,6 +72,10 @@ class Park:
                 pass
             await asyncio.sleep(1)
 
+            if (self.show_queue.qsize() == 0 and random.randint(0,300) == 1): 
+                self.random_gentle()
+
+
     # Pause park operations to run a special thing
     def enqueue(self,show):
         if (self.show_queue.qsize() < 3):
@@ -129,7 +133,8 @@ class Park:
         gentle_shows = [
             Shows.Clouds,
             Shows.Volcano,
-            Shows.Waves
+            Shows.Waves,
+            Shows.VolcanoBubbles
         ]
 
         if self.park_status == 'closed':
