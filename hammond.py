@@ -55,10 +55,12 @@ class Hammond:
 
     # List all our cron jobs here
     def setup_crons(self):
+        schedule.every().day.at("20:00").do(self.p.close)
+        schedule.every().day.at("21:00").do(self.p.close)
         schedule.every().day.at("22:00").do(self.p.close)
         schedule.every().day.at("23:00").do(self.p.close)
         schedule.every().day.at("00:00").do(self.p.close)
-        schedule.every().day.at("06:00").do(self.p.open)
+        schedule.every().day.at("08:00").do(self.p.open)
         #schedule.every(2).to(4).minutes.do(self.p.random_gentle)
 
     # Wrapper so we don't have to asyncio anything outside of the class
